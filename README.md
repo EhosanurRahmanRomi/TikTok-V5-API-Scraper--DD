@@ -67,3 +67,20 @@ This scraper emulates a full browser environment:
 ```python
 # main.py runs the full workflow
 python crawler.py
+
+
+Check the result.json file for the output.
+⚠️ Legal & Ethical Notice
+This tool is designed to assist security researchers and data analysts in understanding how complex anti-bot systems work.
+Do not use this tool for spamming or malicious activity.
+Respect TikTok's robots.txt and Terms of Service.
+The author is not responsible for any misuse of this code.
+🤝 Contribution
+Feel free to fork this repo and submit Pull Requests if you find updated salt values or logic changes.
+Created by [Ehosanur Rahman Romi]
+code
+Code
+### Tips for your GitHub Post:
+1.  **Add Tags:** When you upload it, add tags like: `python`, `web-scraping`, `reverse-engineering`, `tiktok-api`, `x-bogus`, `curl-cffi`.
+2.  **Screenshot:** Take a screenshot of the successful JSON output in your terminal and put it in the README. Visual proof makes your repo look very professional.
+3.  **Don't mention the client:** Never mention "George" or the freelance job. Frame it as your own personal research project.
