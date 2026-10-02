@@ -1,86 +1,95 @@
-# TikTok-V5-API-Scraper--DD
-High-performance asynchronous TikTok Scraper. Pure Python implementation of X-Bogus v5 and X-Gnarly signatures. Features TLS fingerprinting bypass (JA3/JA4) using curl_cffi and automated session handshake logic.
+<p align="center">
+  <img src="docs/images/showcase-banner.svg" alt="TikTok API Research — asynchronous requests, inspectable Python source" width="100%">
+</p>
 
+<p align="center">
+  <strong>A small Python research project for understanding web request construction.</strong><br>
+  Asynchronous networking · Comment-response inspection · Signature experiments
+</p>
 
+<p align="center">
+  <a href="#quick-start">Quick start</a> · <a href="#source-map">Source map</a> ·
+  <a href="#current-scope">Current scope</a> · <a href="LICENSE">Apache 2.0 license</a>
+</p>
 
-# TikTok API Scraper (v5) - Pure Python Implementation
+## Overview
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![Status](https://img.shields.io/badge/Status-Working-brightgreen)
-![License](https://img.shields.io/badge/License-MIT-green)
+An experimental TikTok comment-request client built with Python and `curl_cffi`. Session initialization, request parameters, response handling and signature experiments are organized into four readable source files.
 
-A sophisticated, asynchronous reverse-engineered solution for the TikTok Web API (2026 Standards). 
+The included entry point requests the first page of comments for one configured video and prints JSON to the terminal. There is no desktop interface or packaged release.
 
-This project demonstrates how to generate the complex cryptographic signatures (**X-Bogus** and **X-Gnarly**) required to communicate with TikTok's backend, while bypassing WAF protections and TLS Fingerprinting checks.
+## At a glance
 
-**⚠️ Disclaimer: This repository is for EDUCATIONAL and RESEARCH purposes only.**
+| Area | What is in the source |
+| --- | --- |
+| Networking | An asynchronous `curl_cffi.requests.AsyncSession` |
+| Session handling | Cookie/header/HTML token extraction and server-clock offset handling |
+| Request construction | Video ID, comment count, cursor and configured request headers |
+| Signature experiments | Python routines named `X-Bogus` and `X-Gnarly` |
+| Response handling | JSON output, or an error object when the server returns HTML |
 
-## 🚀 Key Features
+## Quick start
 
-*   **Pure Python Cryptography:** No Node.js runtime or external APIs required. 
-    *   Full implementation of `X-Bogus` (v5.1) algorithm (RC4 encryption, Bitwise shuffling).
-    *   Full implementation of `X-Gnarly` (0404) header generation.
-*   **TLS Fingerprint Bypass:** Uses `curl_cffi` to impersonate real browser TLS handshakes (Chrome 124), bypassing Akamai/Cloudflare bot detection.
-*   **Automated Session Handshake:** Implements a "Cold Start" logic to visit the video page, solve the initial challenge, and acquire valid `ttwid`, `msToken`, and `odinId` cookies.
-*   **Fallback Token Injection:** Includes logic to generate mathematically valid fallback tokens if the proxy handshake is interrupted.
-*   **Asynchronous Architecture:** Built on `asyncio` for high-concurrency scraping.
+Use a local Python 3 environment. The repository does not include a dependency lockfile or a tested-version matrix.
 
-## 🛠️ Technology Stack
+```bash
+git clone https://github.com/EhosanurRahmanRomi/TikTok-V5-API-Scraper--DD.git
+cd TikTok-V5-API-Scraper--DD
+python -m venv .venv
+```
 
-*   **Language:** Python 3.x
-*   **Network:** `curl_cffi` (for TLS Impersonation)
-*   **Crypto:** `hashlib`, `base64` (Standard Libs)
+Activate the environment:
 
-## ⚙️ Installation
+| Platform | Command |
+| --- | --- |
+| Windows PowerShell | `.\.venv\Scripts\Activate.ps1` |
+| macOS / Linux | `source .venv/bin/activate` |
 
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/YOUR_USERNAME/tiktok-v5-scraper.git
-    cd tiktok-v5-scraper
-    ```
+```bash
+python -m pip install curl-cffi
+```
 
-2.  Install dependencies:
-    ```bash
-    pip install curl-cffi
-    ```
+Review [config.py](config.py) before running. Set `TARGET_VIDEO_ID` to the video you are authorized to inspect. Review `BASE_URL`, `USER_AGENT` and `IMPERSONATE_LABEL` for request configuration. An empty `PROXY_URL` uses a direct connection. Keep credentials and session data private.
 
-3.  **Configuration:**
-    Open `config.py` and add your Proxy.
-    *   *Note: High-quality Residential Proxies are recommended to avoid Captchas during the handshake.*
-
-## 🧠 Technical Deep Dive
-
-### The Challenge
-TikTok's API is protected by multiple layers of security:
-1.  **Request Signing:** Modifying any URL parameter without updating the `X-Bogus` signature results in a block.
-2.  **Browser Consistency:** The `X-Gnarly` header binds the request to specific browser attributes and timestamps.
-3.  **TLS Fingerprinting:** Standard Python requests (`urllib`, `requests`) are blocked at the TCP/IP level.
-
-### The Solution
-This scraper emulates a full browser environment:
-1.  **Token Acquisition:** It performs a "Warmup" request to the target video page to synchronize cookies (`tt_chain_token`, `ttwid`) with the specific video context.
-2.  **Signature Generation:** It takes the query parameters, User-Agent, and Timestamp, and processes them through a custom RC4/MD5 algorithm derived from the obfuscated `signer.js` SDK.
-3.  **Header Ordering:** It enforces strict HTTP header ordering to match Chrome's network stack behavior.
-
-## 📋 Usage
-
-```python
-# main.py runs the full workflow
+```bash
 python crawler.py
+```
 
+The response appears in the terminal. The current program does **not** create `result.json` automatically.
 
-Check the result.json file for the output.
-⚠️ Legal & Ethical Notice
-This tool is designed to assist security researchers and data analysts in understanding how complex anti-bot systems work.
-Do not use this tool for spamming or malicious activity.
-Respect TikTok's robots.txt and Terms of Service.
-The author is not responsible for any misuse of this code.
-🤝 Contribution
-Feel free to fork this repo and submit Pull Requests if you find updated salt values or logic changes.
-Created by [Ehosanur Rahman Romi]
-code
-Code
-### Tips for your GitHub Post:
-1.  **Add Tags:** When you upload it, add tags like: `python`, `web-scraping`, `reverse-engineering`, `tiktok-api`, `x-bogus`, `curl-cffi`.
-2.  **Screenshot:** Take a screenshot of the successful JSON output in your terminal and put it in the README. Visual proof makes your repo look very professional.
-3.  **Don't mention the client:** Never mention "George" or the freelance job. Frame it as your own personal research project.
+## Source map
+
+| File | Responsibility |
+| --- | --- |
+| [crawler.py](crawler.py) | Session initialization, one comment request and terminal output |
+| [algorithms.py](algorithms.py) | Signature-generation experiments |
+| [utils.py](utils.py) | Device ID generation and token extraction helpers |
+| [config.py](config.py) | Endpoint, target video and request/signing configuration |
+
+```text
+Configuration → Session initialization → Comment request → Terminal JSON
+                      ↑                       ↑
+                Token helpers          Signature experiments
+```
+
+## Current scope
+
+- The default request uses `count=20` and `cursor=0`. Pagination and bulk collection are not implemented.
+- The entry point performs one workflow. An asynchronous session does not establish a measured concurrency or performance guarantee.
+- Current endpoint and signature compatibility have not been verified for this showcase update. The `X-Gnarly` routine is hash-derived; no validation tests establish compatibility with TikTok's current implementation.
+- An HTML response returns an error object. There is no interactive CAPTCHA solver.
+- The repository has no automated test suite or reproducible successful-response fixture.
+
+## Research and contributions
+
+Use the project for authorized educational research and follow the service's terms and applicable rules. It is an independent project with no TikTok affiliation.
+
+[Report an issue](https://github.com/EhosanurRahmanRomi/TikTok-V5-API-Scraper--DD/issues) with dependency versions, reproduction steps and a redacted response. Exclude cookies, tokens, credentials and private account details.
+
+## License
+
+The repository's [LICENSE](LICENSE) is **Apache License 2.0**.
+
+---
+
+Maintained by [Ehosanur Rahman Romi](https://github.com/EhosanurRahmanRomi).
